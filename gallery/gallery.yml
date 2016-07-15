@@ -1,0 +1,17 @@
+title: Gallery module
+pages: false
+
+# This module may have images with alternative text
+files:
+  type: image
+  sortable: true
+  fields:
+    alt:
+      label: Alternative text
+      type: text
+
+fields:
+  # The title is only used in the Panel for this module
+  title:
+    label: Module title
+    type: text
