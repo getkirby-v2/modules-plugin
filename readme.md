@@ -14,6 +14,8 @@ A module in the context of this plugin is:
 One content page can have multiple module subpages of different types and module subpages can contain images or other files depending on the module type.
 These module subpages can be reordered in the Panel like other pages. The order in the Panel defines the order on the page. They can also be set to "invisible", which hides them on the page as well, so they can be used as drafts within a page.
 
+You can find a demo of how such a module looks like [on the `demo` branch](https://github.com/getkirby-plugins/modules-plugin/tree/demo).
+
 ## Installation
 
 To install the plugin, please put it in the `site/plugins` directory. Create a `site/modules` directory for the code of your modules.
