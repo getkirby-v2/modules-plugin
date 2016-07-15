@@ -1,0 +1,8 @@
+{
+  "name": "modules",
+  "description": "Kirby Modules Plugin",
+  "author": "Lukas Bestle <lukas@getkirby.com>",
+  "license": "MIT",
+  "version": "1.0.0",
+  "type": "kirby-plugin"
+}
