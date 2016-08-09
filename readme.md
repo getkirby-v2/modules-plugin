@@ -131,6 +131,37 @@ c::set('modules.parent.uid', 'modules');
 c::set('modules.template.prefix', 'module.');
 ```
 
+## Helper methods
+
+Besides the main `$page->modules()` method that is used to output the module snippets, there are also a few other helper methods you can use:
+
+### `$page->moduleList()`
+
+Returns an array of the module pages for the given page.
+
+### `$page->moduleCount($type)`
+
+Returns the number of modules. If `$type` is given, returns the number of modules of that type.
+
+### `$page->hasModules($type)`
+
+Returns whether the page has any modules. If `$type` is given, returns whether the page has modules of that type.
+
+### `$module->page()`
+
+Returns the page where the module appears. Depending on your setup, it's either the parent page or the grandparent page.
+
+### `$module->module()`
+
+Returns the module object. You can use it to get more information about the module:
+
+```
+var_dump($module->module()->name()); // Name of the module
+var_dump($module->module()->template()); // Template name of the module
+```
+
+There are also a few other values of the module object, see `lib/module.php`.
+
 ## Using together with the Patterns plugin
 
 Since the plugin only requires the modules to have a snippet and a blueprint, modules can be stored inside the `site/patterns` directory if you use the [Patterns plugin](https://github.com/getkirby-plugins/patterns-plugin). This is useful if you want to present the different modules in the Patterns interface.

@@ -8,11 +8,12 @@
 
 // Define autoloader
 load(array(
-	'kirby\\modules\\modules' => __DIR__ . DS . 'lib' . DS . 'modules.php',
-	'kirby\\modules\\module'  => __DIR__ . DS . 'lib' . DS . 'module.php',
+	'kirby\\modules\\modules'    => __DIR__ . DS . 'lib' . DS . 'modules.php',
+	'kirby\\modules\\module'     => __DIR__ . DS . 'lib' . DS . 'module.php',
+	'kirby\\modules\\modulepage' => __DIR__ . DS . 'lib' . DS . 'modulepage.php',
 ));
 
-// Register page method and blueprints
+// Register page methods, blueprints and page models
 Kirby\Modules\Modules::register();
 
 /**

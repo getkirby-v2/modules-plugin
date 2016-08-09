@@ -88,7 +88,7 @@ class Modules {
 	}
 	
 	/**
-	 * Registers the page method and all blueprints within Kirby
+	 * Registers the page methods, page models and all blueprints within Kirby
 	 * Called only once when the plugin is loaded
 	 */
 	public static function register() {
@@ -98,10 +98,33 @@ class Modules {
 		// Calling it will call the modules() helper
 		$kirby->set('page::method', 'modules', 'modules');
 		
-		// Register blueprints and dummy templates for all modules
+		// Register $page->moduleList() method
+		$kirby->set('page::method', 'moduleList', function($page) {
+			$modules = new static($page);
+			return $modules->modules();
+		});
+		
+		// Register $page->moduleCount($module) method
+		$kirby->set('page::method', 'moduleCount', function($page, $module = null) {
+			$moduleList = $page->moduleList();
+			if($module) {
+				$module = new Module($module);
+				$moduleList = $moduleList->filterBy('intendedTemplate', $module->template());
+			}
+			
+			return $moduleList->count();
+		});
+		
+		// Register $page->hasModules($module) method
+		$kirby->set('page::method', 'hasModules', function($page, $module = null) {
+			return $page->moduleCount($module) > 0;
+		});
+		
+		// Register blueprints, page models and dummy templates for all modules
 		foreach(static::allModules() as $module) {
-			$kirby->set('blueprint', $module->template(), $module->blueprintFile());
-			$kirby->set('template',  $module->template(), dirname(__DIR__) . DS . 'etc' . DS . 'template.php');
+			$kirby->set('blueprint',   $module->template(), $module->blueprintFile());
+			$kirby->set('page::model', $module->template(), 'kirby\\modules\\modulepage');
+			$kirby->set('template',    $module->template(), dirname(__DIR__) . DS . 'etc' . DS . 'template.php');
 		}
 	}
 	
