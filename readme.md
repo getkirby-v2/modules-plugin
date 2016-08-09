@@ -155,7 +155,7 @@ Returns the page where the module appears. Depending on your setup, it's either 
 
 Returns the module object. You can use it to get more information about the module:
 
-```
+```php
 var_dump($module->module()->name()); // Name of the module
 var_dump($module->module()->template()); // Template name of the module
 ```
