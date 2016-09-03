@@ -32,6 +32,6 @@ class ModulePage extends Page {
 	 * @return Module
 	 */
 	public function module() {
-		return new Module($this);
+		return Modules::module($this);
 	}
 }

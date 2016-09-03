@@ -162,6 +162,22 @@ var_dump($module->module()->template()); // Template name of the module
 
 There are also a few other values of the module object, see `lib/module.php`.
 
+## The module registry
+
+You can also register modules from other plugins with the module [registry](https://getkirby.com/docs/developer-guide/plugins/registry):
+
+```php
+<?php
+
+// Make sure that the Modules plugin is loaded
+$kirby->plugin('modules');
+
+// Register your module
+$kirby->set('module', 'text', __DIR__ . DS . 'modules' . DS . 'text');
+```
+
+Like in the example above, you need to load the Modules plugin before registering your modules.
+
 ## Using together with the Patterns plugin
 
 Since the plugin only requires the modules to have a snippet and a blueprint, modules can be stored inside the `site/patterns` directory if you use the [Patterns plugin](https://github.com/getkirby-plugins/patterns-plugin). This is useful if you want to present the different modules in the Patterns interface.

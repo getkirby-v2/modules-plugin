@@ -21,7 +21,7 @@ class Modules {
 	
 	// Caches
 	protected $modules;
-	protected static $allModules;
+	protected static $moduleObjs;
 	
 	/**
 	 * Class constructor
@@ -44,7 +44,8 @@ class Modules {
 		
 		// Loop through all valid modules in the file system order
 		foreach($this->modules() as $module) {
-			$moduleObj  = new Module($module);
+			$moduleObj = static::module($module);
+			if(!$moduleObj) continue;
 			$moduleName = $moduleObj->name();
 			
 			// Use the additional data but make sure that $module and $moduleName always win
@@ -77,8 +78,8 @@ class Modules {
 		// Filter the modules by visibility and valid module
 		$modules = $modules->visible()->filter(function($page) {
 			try {
-				$module = new Module($page);
-				return $module->validate();
+				$module = static::module($page);
+				return $module && $module->validate();
 			} catch(Error $e) {
 				return false;
 			}
@@ -108,7 +109,8 @@ class Modules {
 		$kirby->set('page::method', 'moduleCount', function($page, $module = null) {
 			$moduleList = $page->moduleList();
 			if($module) {
-				$module = new Module($module);
+				$module = static::module($module);
+				if(!$module) return 0;
 				$moduleList = $moduleList->filterBy('intendedTemplate', $module->template());
 			}
 			
@@ -122,10 +124,28 @@ class Modules {
 		
 		// Register blueprints, page models and dummy templates for all modules
 		foreach(static::allModules() as $module) {
-			$kirby->set('blueprint',   $module->template(), $module->blueprintFile());
-			$kirby->set('page::model', $module->template(), 'kirby\\modules\\modulepage');
-			$kirby->set('template',    $module->template(), dirname(__DIR__) . DS . 'etc' . DS . 'template.php');
+			static::registerModule($module);
 		}
+	}
+	
+	/**
+	 * Registers the blueprint, page model and template for a module
+	 * 
+	 * @param Module/string $module Module object or module name
+	 */
+	public static function registerModule($module) {
+		$kirby = kirby();
+		
+		// Make sure that we have a module object
+		if(is_string($module)) {
+			$moduleName = $module;
+			$module     = static::module($moduleName);
+			if(!$module) throw new Error('Invalid module ' . $moduleName);
+		}
+		
+		$kirby->set('blueprint',   $module->template(), $module->blueprintFile());
+		$kirby->set('page::model', $module->template(), 'kirby\\modules\\modulepage');
+		$kirby->set('template',    $module->template(), dirname(__DIR__) . DS . 'etc' . DS . 'template.php');
 	}
 	
 	/**
@@ -159,25 +179,55 @@ class Modules {
 	}
 	
 	/**
-	 * Returns an array of all Module objects
+	 * Returns a module object by name or module page object
+	 * If the module does not exists, returns false
+	 *
+	 * @param  string/Page $name Module name or module page
+	 * @return Module
+	 */
+	public static function module($name) {
+		// Get the module name from the template if a page is given
+		if(is_a($name, 'Page')) {
+			$templatePrefix = static::templatePrefix();
+			
+			// Validate that the page is a module
+			if(!str::startsWith($name->intendedTemplate(), $templatePrefix)) {
+				throw new Error('The given page is no module.');
+			}
+			
+			$prefixLength = str::length($templatePrefix);
+			$name = str::substr($name->intendedTemplate(), $prefixLength);
+		}
+		
+		// Return from cache if possible
+		if(isset(static::$moduleObjs[$name])) return static::$moduleObjs[$name];
+		
+		// Get the path of the module
+		$path = kirby()->get('module', $name);
+		if(!$path) return false;
+		
+		// Create a new module object and validate the module
+		$module = new Module($name, $path);
+		if($module->validate()) {
+			return static::$moduleObjs[$name] = $module;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns an array of all valid Module objects
 	 *
 	 * @return array
 	 */
 	public static function allModules() {
-		// Return from cache if possible
-		if(static::$allModules) return static::$allModules;
+		// Get the module names from the registry
 		$allModules = array();
-		
-		// Read the modules directory
-		$basePath = static::directory();
-		foreach(dir::read($basePath) as $name) {
-			$path = $basePath . DS . $name;
-			if(!is_dir($path)) continue;
-			
-			$module = new Module($name);
-			if($module->validate()) $allModules[$name] = $module;
+		foreach(kirby()->get('module') as $name) {
+			$module = static::module($name);
+			if($module) $allModules[$name] = $module;
 		}
 		
-		return static::$allModules = $allModules;
+		return $allModules;
 	}
 }
