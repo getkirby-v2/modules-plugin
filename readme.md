@@ -94,7 +94,7 @@ Every time you then create a page with the default blueprint, the Panel will aut
 
 ### Printing the modules in the template
 
-The plugin provides a `$page->modules()` method that automatically fetches the module pages for the given page, runs their snippets and outputs the resulting HTML.
+The plugin provides a `$page->modules()` method that automatically fetches all visible module pages for the given page, runs their snippets and outputs the resulting HTML.
 
 Depending on your site, your default template can be as simple as this:
 
