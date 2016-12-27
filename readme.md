@@ -147,6 +147,16 @@ Returns the number of modules. If `$type` is given, returns the number of module
 
 Returns whether the page has any modules. If `$type` is given, returns whether the page has modules of that type.
 
+### `$page->isModule()`
+
+Returns whether the given page is a module. You can use this method to exclude modules from navigations etc.:
+
+```php
+<?php foreach($pages->filterBy('isModule', false) as $p): ?>
+  ...
+<?php endforeach ?>
+```
+
 ### `$module->page()`
 
 Returns the page where the module appears. Depending on your setup, it's either the parent page or the grandparent page.

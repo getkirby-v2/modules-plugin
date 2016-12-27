@@ -75,6 +75,11 @@ class Modules extends Collection {
 			return $page->moduleCount($module) > 0;
 		});
 		
+		// Register $page->isModule() method
+		$kirby->set('page::method', 'isModule', function($page) {
+			return is_a($page, 'Kirby\\Modules\\ModulePage');
+		});
+		
 		// Register blueprints, page models and dummy templates for all modules
 		foreach($this as $module) {
 			$module->register();
