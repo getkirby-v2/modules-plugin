@@ -3,10 +3,8 @@
 namespace Kirby\Modules;
 
 // Kirby dependencies
-use Error;
 use Obj;
-use Page;
-use Str;
+use Tpl;
 
 /**
  * Module
@@ -31,7 +29,7 @@ class Module extends Obj {
 	public function __construct($name, $path) {
 		$this->name     = $name;
 		$this->path     = $path;
-		$this->template = Modules::templatePrefix() . $name;
+		$this->template = Settings::templatePrefix() . $name;
 		
 		// Store the file paths of the module
 		$this->blueprintFile = $path . DS . $name . '.yml';
@@ -45,5 +43,33 @@ class Module extends Obj {
 	 */
 	public function validate() {
 		return is_file($this->blueprintFile) && is_file($this->snippetFile);
+	}
+	
+	/**
+	 * Registers the module
+	 */
+	public function register() {
+		$kirby = kirby();
+		
+		$kirby->set('blueprint',   $this->template(), $this->blueprintFile());
+		$kirby->set('page::model', $this->template(), 'kirby\\modules\\modulepage');
+		$kirby->set('template',    $this->template(), dirname(__DIR__) . DS . 'etc' . DS . 'template.php');
+	}
+	
+	/**
+	 * Renders the module snippet with the given data
+	 *
+	 * @param  Page   $page Module page
+	 * @param  array  $data Optional additional data to pass to the snippet
+	 * @return string
+	 */
+	public function render($page, $data = []) {
+		// Use the additional data but make sure that $module and $moduleName always win
+		$data = array_merge($data, [
+			'module'     => $page,
+			'moduleName' => $this->name()
+		]);
+		
+		return tpl::load($this->snippetFile(), $data, true);
 	}
 }

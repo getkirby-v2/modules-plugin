@@ -109,8 +109,8 @@ There is also a `modules($page)` helper that works exactly the same.
 #### Optional parameters
 
 ```php
-$page->modules($data = array(), $return = false);
-modules($page, $data = array(), $return = false);
+$page->modules($data = [], $return = false);
+modules($page, $data = [], $return = false);
 ```
 
 The modules function and method behave like the `snippet()` function. `$data` can be used to provide additional data to all modules and `$return` can be set to `true` to return the HTML code instead of printing it.
@@ -192,29 +192,29 @@ There are three things you need to watch out for:
 <?php
 
 // Option 1: Return a random module of the respective type
-return array(
+return [
 	'preview' => function() {
-		return array(
+		return [
 			'module' => site()->index()->filterBy('intendedTemplate', 'module.text')->shuffle()->first()
-		);
+		];
 	}
-);
+];
 
 // OR
 // Option 2: Return a custom module just for the preview
-return array(
+return [
 	'preview' => function() {
 		// Define each field from your module blueprint with a value
-		$data = array(
+		$data = [
 			'text' => 'Lorem ipsum dolor sit amet.'
-		);
+		];
 		
 		// Return an Obj, which is pretty close to a page in its API
-		return array(
+		return [
 			'module' => new Obj($data)
-		);
+		];
 	}
-);
+];
 ```
 
 ## License

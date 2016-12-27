@@ -7,18 +7,21 @@
  */
 
 // Define autoloader
-load(array(
+load([
 	'kirby\\modules\\modules'    => __DIR__ . DS . 'lib' . DS . 'modules.php',
 	'kirby\\modules\\module'     => __DIR__ . DS . 'lib' . DS . 'module.php',
 	'kirby\\modules\\modulepage' => __DIR__ . DS . 'lib' . DS . 'modulepage.php',
-	'kirby\\registry\\module'    => __DIR__ . DS . 'lib' . DS . 'moduleregistry.php'
-));
+	'kirby\\registry\\module'    => __DIR__ . DS . 'lib' . DS . 'moduleregistry.php',
+	'kirby\\modules\\renderer'   => __DIR__ . DS . 'lib' . DS . 'renderer.php',
+	'kirby\\modules\\settings'   => __DIR__ . DS . 'lib' . DS . 'settings.php'
+]);
 
 // Register page methods, blueprints and page models
-Kirby\Modules\Modules::register();
+$modules = Kirby\Modules\Modules::instance();
+$modules->register();
 
 /**
- * Helper function to output modules for a given page
+ * Helper function to render modules for a given page
  * You can also use $page->modules($data, $return)
  *
  * @param  Page    $page   Kirby page that contains modules
@@ -26,7 +29,7 @@ Kirby\Modules\Modules::register();
  * @param  boolean $return Whether to output or return the module string
  * @return string
  */
-function modules($page, $data = array(), $return = false) {
-	$modules = new Kirby\Modules\Modules($page);
-	return $modules->output($data, $return);
+function modules($page, $data = [], $return = false) {
+	$modules = new Kirby\Modules\Renderer($page);
+	return $modules->render($data, $return);
 }

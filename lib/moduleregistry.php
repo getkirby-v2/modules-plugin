@@ -8,6 +8,7 @@ use Exception;
 
 // Internal dependencies
 use Kirby\Modules\Modules;
+use Kirby\Modules\Settings;
 
 /**
  * Module registry
@@ -31,7 +32,7 @@ class Module extends Entry {
 		if(is_dir($path)) {
 			// Register the new module
 			static::$modules[$name] = $path;
-			Modules::registerModule($name);
+			Modules::instance()->registryNotification($name);
 			
 			return $path;
 		} else if($this->kirby->option('debug')) {
@@ -49,7 +50,7 @@ class Module extends Entry {
 	public function get($name = null) {
 		if(is_null($name)) {
 			$modules  = [];
-			$basePath = Modules::directory();
+			$basePath = Settings::directory();
 			foreach(dir::read($basePath) as $module) {
 				if(is_dir($basePath . DS . $module)) $modules[] = $module;
 			}
@@ -57,7 +58,7 @@ class Module extends Entry {
 		}
 		
 		// Get from main modules directory
-		$path = Modules::directory() . DS . $name;
+		$path = Settings::directory() . DS . $name;
 		if(is_dir($path)) return $path;
 		
 		// Get from registry

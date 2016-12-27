@@ -19,7 +19,7 @@ class ModulePage extends Page {
 	 * @return Page
 	 */
 	public function page() {
-		if($this->parent()->uid() === Modules::parentUid()) {
+		if($this->parent()->uid() === Settings::parentUid()) {
 			return $this->parent()->parent();
 		} else {
 			return $this->parent();
@@ -32,6 +32,6 @@ class ModulePage extends Page {
 	 * @return Module
 	 */
 	public function module() {
-		return Modules::module($this);
+		return Modules::instance()->get($this);
 	}
 }
