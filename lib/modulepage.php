@@ -34,4 +34,21 @@ class ModulePage extends Page {
 	public function module() {
 		return Modules::instance()->get($this);
 	}
+	
+	/**
+	 * Renders this single module
+	 *
+	 * @param  array   $data   Optional additional data to pass to the snippet
+	 * @param  boolean $return Whether to output or return the module string
+	 * @return string
+	 */
+	public function render($data = [], $return = false) {
+		$result = $this->module()->render($this, $data);
+		
+		if($return) {
+			return $result;
+		} else {
+			echo $result;
+		}
+	}
 }

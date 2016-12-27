@@ -115,6 +115,14 @@ modules($page, $data = [], $return = false);
 
 The modules function and method behave like the `snippet()` function. `$data` can be used to provide additional data to all modules and `$return` can be set to `true` to return the HTML code instead of printing it.
 
+#### Printing single modules
+
+It is also possible to print just a single module. This is useful if you want to include a module of a different page:
+
+```php
+page('about-us')->moduleList()->find('contact')->render($data = [], $return = false);
+```
+
 ## Configuration
 
 If you follow the instructions above, you don't need to configure anything manually.
