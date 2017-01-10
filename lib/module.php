@@ -56,7 +56,7 @@ class Module extends Obj {
 		$kirby->set('blueprint', $template, $this->blueprintFile());
 		$kirby->set('template',  $template, dirname(__DIR__) . DS . 'etc' . DS . 'template.php');
 
-		// Load user defined Page model in case one exists
+		// Load custom Page model in case one exists
 		if (!array_key_exists($template, page::$models)) {
 			$kirby->set('page::model', $template, 'kirby\\modules\\modulepage');
 		}
