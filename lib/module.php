@@ -5,6 +5,7 @@ namespace Kirby\Modules;
 // Kirby dependencies
 use Obj;
 use Tpl;
+use Page;
 
 /**
  * Module
@@ -50,10 +51,15 @@ class Module extends Obj {
 	 */
 	public function register() {
 		$kirby = kirby();
-		
-		$kirby->set('blueprint',   $this->template(), $this->blueprintFile());
-		$kirby->set('page::model', $this->template(), 'kirby\\modules\\modulepage');
-		$kirby->set('template',    $this->template(), dirname(__DIR__) . DS . 'etc' . DS . 'template.php');
+		$template = $this->template();
+
+		$kirby->set('blueprint', $template, $this->blueprintFile());
+		$kirby->set('template',  $template, dirname(__DIR__) . DS . 'etc' . DS . 'template.php');
+
+		// Load custom Page model in case one exists
+		if (!array_key_exists($template, page::$models)) {
+			$kirby->set('page::model', $template, 'kirby\\modules\\modulepage');
+		}
 	}
 	
 	/**
