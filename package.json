@@ -5,4 +5,8 @@
   "license": "MIT",
   "version": "1.3.0",
   "type": "kirby-plugin"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getkirby-plugins/modules-plugin"
+  }
 }
