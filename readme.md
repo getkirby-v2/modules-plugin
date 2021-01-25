@@ -1,4 +1,4 @@
-# Kirby Modules Plugin
+# Kirby 2 Modules Plugin
 
 With Kirby Modules you can make the content of your Kirby site modular. It allows users to create custom editorial pages that are composed of multiple content modules such as body text, galleries, pull quotes or maps.
 
